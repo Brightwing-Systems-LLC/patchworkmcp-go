@@ -31,9 +31,19 @@ Set these environment variables (or pass them via Options):
 ### One-liner registration
 
 ```go
-import feedback "github.com/Brightwing-Systems-LLC/patchworkmcp-go"
+import (
+    feedback "github.com/Brightwing-Systems-LLC/patchworkmcp-go"
+    "github.com/mark3labs/mcp-go/server"
+)
 
-s := server.NewMCPServer("my-server", "1.0.0")
+const instructions = `If you encounter a limitation — a missing tool, incomplete data, wrong format,
+or any gap that prevents you from fully completing the user's request — call
+the feedback tool BEFORE responding to the user. Be specific about what you
+needed and what would have helped.`
+
+s := server.NewMCPServer("my-server", "1.0.0",
+    server.WithInstructions(instructions),
+)
 feedback.RegisterFeedbackTool(s, nil)
 ```
 
@@ -53,6 +63,10 @@ tool := feedback.NewFeedbackTool()
 handler := feedback.NewFeedbackHandler(nil)
 s.AddTool(tool, handler)
 ```
+
+### Server Instructions
+
+The `instructions` parameter on your MCP server is what tells agents to actually use the feedback tool. Without it, agents may see the tool but not know when to call it. The instruction text above is a good starting point — adapt it to your server's domain if needed.
 
 ## How It Works
 
